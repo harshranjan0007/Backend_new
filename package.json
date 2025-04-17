@@ -1,0 +1,16 @@
+{
+  "name": "backend_first",
+  "version": "1.0.0",
+  "description": "new backend practice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "and",
+    "backend"
+  ],
+  "author": "harsh ranjan",
+  "license": "ISC"
+}
