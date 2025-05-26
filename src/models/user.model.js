@@ -5,7 +5,7 @@ import bcrypt from "bcrypt"
 const userSchema = new Schema(
     {
 
-        usernmae: {
+        username: {
             type: String,
             required: true,
             unique: true,
@@ -28,7 +28,7 @@ const userSchema = new Schema(
         },
         avatar: {
             type: String, // cloudinary url
-            required: true,
+            required: true,  
         },
         coverImage: {
             type: String, // cloudinary url
