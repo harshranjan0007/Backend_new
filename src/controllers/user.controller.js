@@ -2,7 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { ApiRespones } from "../utils/ApiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import cloudinary from "cloudinary"
@@ -45,11 +45,10 @@ const registerUser = asyncHandler(async (req, res) => {
   //     fullName , email , username , password
   // )
 
-  if (
-    [fullName, email, username, password].some((field) => field?.trim() === "")
-  ) {
-    throw new ApiError(400, "All fields are required");
-  }
+ if (!fullName || !email || !username || !password) {
+  throw new ApiError(400, "All fields are required");
+}
+
 
   const existedUser = await User.findOne({
     $or: [{ username }, { email }],
@@ -102,7 +101,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiRespones(200, createdUser, "User Registered successfully"));
+    .json(new ApiResponse(200, createdUser, "User Registered successfully"));
 
   // if (fullName  === "") {
   //     throw new ApiError(400 , "fullname is required")
@@ -157,7 +156,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
     .json(
-      new ApiRespones(
+      new ApiResponse(
         200,
         {
           user: loggedInUser,
@@ -190,7 +189,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiRespones(200, {}, "User logged out"));
+    .json(new ApiResponse(200, {}, "User logged out"));
 });
 
 const refereshAccessToken = asyncHandler(async (req, res) => {
@@ -230,7 +229,7 @@ const refereshAccessToken = asyncHandler(async (req, res) => {
       .cookie("accessToken", accessToken, options)
       .cookie("RefreshToken", newRefreshToken, options)
       .json(
-        new ApiRespones(
+        new ApiResponse(
           200,
           { accessToken, refreshToken: newRefreshToken },
           "Access Token Refreshed"
@@ -262,13 +261,13 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiRespones(200, {}, "Password Change Successfully"));
+    .json(new ApiResponse(200, {}, "Password Change Successfully"));
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
- .json(new ApiRespones(
+ .json(new ApiResponse(
         200,
         req.user,
         "User fetched successfully"
@@ -295,7 +294,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiRespones(200, user, "Account Details update successfully"));
+    .json(new ApiResponse(200, user, "Account Details update successfully"));
 });
 
 const updateUserAvatar = asyncHandler(async(req, res) => {
@@ -327,7 +326,7 @@ const updateUserAvatar = asyncHandler(async(req, res) => {
     return res
     .status(200)
     .json(
-        new ApiRespones(200, user, "avatar update successfully")
+        new ApiResponse(200, user, "avatar update successfully")
     )
 })
 const deleteUserAvatar = asyncHandler(async(req, res) => {
@@ -335,7 +334,7 @@ const deleteUserAvatar = asyncHandler(async(req, res) => {
     return res
     .status(200)
     .json(
-        new ApiRespones(200,  "avatar delete successfully")
+        new ApiResponse(200,  "avatar delete successfully")
     )
 })
 
@@ -369,7 +368,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
     return res
     .status(200)
     .json(
-        new ApiRespones(200, user, "CoverImage update successfully")
+        new ApiResponse(200, user, "CoverImage update successfully")
     )
 })
 
@@ -378,7 +377,7 @@ const deleteUserCoverImage = asyncHandler(async(req, res) => {
     return res
     .status(200)
     .json(
-        new ApiRespones(200,  "coverImage delete successfully")
+        new ApiResponse(200,  "coverImage delete successfully")
     )
 })
 
@@ -454,7 +453,7 @@ const getUserChannelProfile = asyncHandler(async(req, res) => {
     return res
     .status(200)
     .json(
-        new ApiRespones(200, channel[0], "User Channel fetched successfully")
+        new ApiResponse(200, channel[0], "User Channel fetched successfully")
     )
 
 })
@@ -507,7 +506,7 @@ const getWatchHistory = asyncHandler(async(req,res) => {
 
     return res.status(200)
     .json(
-      new ApiRespones(
+      new ApiResponse(
         200, user[0].watchHistory,
         "watch history fetched successfully"
       )
